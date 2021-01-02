@@ -5,7 +5,6 @@ import (
 	"github.com/drgrib/iter"
 	"github.com/sikbrad/UnderstandingKalmanFilterGolang/gqmathutil"
 	"gonum.org/v1/gonum/mat"
-	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
 	"math/rand"
@@ -37,7 +36,6 @@ func main() {
 	fmt.Println("Started AvgFilter")
 
 	avgFilter := AvgFilter()
-	avgFilter(10)
 
 	dt := 0.2
 	t := gqmathutil.Linspace(0, 10, dt)
@@ -58,19 +56,12 @@ func main() {
 	gqmathutil.PrintMatrix(avgSaved, "avgSaved")
 	gqmathutil.PrintMatrix(xmSaved, "xmSaved")
 
-	p, err := plot.New()
-	if err != nil {
-		panic(err)
-	}
-
-	p.Title.Text = "Plotutil example"
-	p.X.Label.Text = "X"
-	p.Y.Label.Text = "Y"
+	p := gqmathutil.New2dPlotter("average filter")
 
 	ptsAvg := gqmathutil.GetXyPointsFromVector(t, avgSaved)
 	ptsXm := gqmathutil.GetXyPointsFromVector(t, xmSaved)
 
-	err = plotutil.AddLinePoints(p,
+	err := plotutil.AddLinePoints(p,
 		"ptsAvg", ptsAvg,
 		"ptsXm", ptsXm)
 	if err != nil {

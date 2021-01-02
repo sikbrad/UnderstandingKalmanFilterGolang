@@ -3,6 +3,7 @@ package gqmathutil
 import (
 	"fmt"
 	"gonum.org/v1/gonum/mat"
+	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 )
 
@@ -59,4 +60,17 @@ func GetXyPointsFromFloatArray(xArr, yArr []float64) plotter.XYs {
 		pts[i].Y = yArr[i]
 	}
 	return pts
+}
+
+func New2dPlotter(name string) *plot.Plot {
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	p.Title.Text = name
+	p.X.Label.Text = "X"
+	p.Y.Label.Text = "Y"
+
+	return p
 }
