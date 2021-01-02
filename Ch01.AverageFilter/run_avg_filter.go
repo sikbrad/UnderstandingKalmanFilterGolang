@@ -67,10 +67,6 @@ func main() {
 	p.X.Label.Text = "X"
 	p.Y.Label.Text = "Y"
 
-	//pts := gqmathutil.GetXyPointsFromFloatArray(
-	//	gqmathutil.ToFloatSlice(t),
-	//	gqmathutil.ToFloatSlice(avgSaved))
-
 	ptsAvg := gqmathutil.GetXyPointsFromVector(t, avgSaved)
 	ptsXm := gqmathutil.GetXyPointsFromVector(t, xmSaved)
 
@@ -82,7 +78,7 @@ func main() {
 	}
 
 	// Save the plot to a PNG file.
-	if err := p.Save(4*vg.Inch, 4*vg.Inch, "../tmp/res_images/points.png"); err != nil {
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, "../tmp/res_images/ch01_average_filter_points.png"); err != nil {
 		panic(err)
 	}
 }

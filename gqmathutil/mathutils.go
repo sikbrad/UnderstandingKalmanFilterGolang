@@ -27,7 +27,6 @@ func PrintMatrixWithFormatter(mtx mat.Matrix, name, numFormat string) {
 	fmt.Printf("prints matrix [%s], dim[%v,%v]\n", name, rows, cols)
 	fa := mat.Formatted(mtx, mat.Prefix("    "), mat.Squeeze())
 	fmtStr := fmt.Sprintf("%%s = %s\n", numFormat)
-	//fmtStr := fmt.Sprintf("%s", numFormat)
 	fmt.Printf(fmtStr, name, fa)
 }
 
@@ -47,8 +46,9 @@ func GetXyPointsFromVector(xVec, yVec *mat.VecDense) plotter.XYs {
 
 func GetXyPointsFromFloatArray(xArr, yArr []float64) plotter.XYs {
 	if len(xArr) != len(yArr) {
-		msg := fmt.Sprintf("xArr and yArr"+
-			"length differes X[%v] Y[%v]",
+		msg := fmt.Sprintf(
+			"xArr and yArr"+
+				"length differes X[%v] Y[%v]",
 			len(xArr), len(yArr))
 		panic(msg)
 	}
@@ -57,12 +57,6 @@ func GetXyPointsFromFloatArray(xArr, yArr []float64) plotter.XYs {
 	for i := range pts {
 		pts[i].X = xArr[i]
 		pts[i].Y = yArr[i]
-		//if i == 0 {
-		//	pts[i].X = rand.Float64()
-		//} else {
-		//	pts[i].X = pts[i-1].X + rand.Float64()
-		//}
-		//pts[i].Y = pts[i].X + 10*rand.Float64()
 	}
 	return pts
 }
