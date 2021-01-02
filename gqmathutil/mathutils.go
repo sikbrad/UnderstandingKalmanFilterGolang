@@ -74,3 +74,28 @@ func New2dPlotter(name string) *plot.Plot {
 
 	return p
 }
+
+func NewVectorOne(n int) *mat.VecDense {
+	return newVectorWithSingleValue(n, 1.0)
+}
+func NewVectorZero(n int) *mat.VecDense {
+	return newVectorWithSingleValue(n, 0.0)
+}
+
+func newVectorWithSingleValue(n int, val float64) *mat.VecDense {
+	vec := mat.NewVecDense(n, nil)
+
+	for i := range make([]int, vec.Len()) {
+		vec.SetVec(i, val)
+	}
+
+	return vec
+}
+
+func SumVector(vec *mat.VecDense) float64 {
+	sum := 0.0
+	for i := range make([]int, vec.Len()) {
+		sum += vec.AtVec(i)
+	}
+	return sum
+}

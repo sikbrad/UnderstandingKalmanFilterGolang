@@ -69,7 +69,7 @@ func main() {
 	}
 
 	// Save the plot to a PNG file.
-	if err := p.Save(4*vg.Inch, 4*vg.Inch, "../tmp/res_images/ch01_average_filter_points.png"); err != nil {
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, "tmp/res_images/ch01_average_filter_points.png"); err != nil {
 		panic(err)
 	}
 }
