@@ -3,7 +3,7 @@ module github.com/sikbrad/UnderstandingKalmanFilterGolang
 go 1.15
 
 require (
-	github.com/drgrib/iter v0.0.0-20170410174532-f217f3c890f6 // indirect
+	github.com/drgrib/iter v0.0.0-20170410174532-f217f3c890f6
 	github.com/gonum/blas v0.0.0-20181208220705-f22b278b28ac // indirect
 	github.com/gonum/floats v0.0.0-20181209220543-c233463c7e82 // indirect
 	github.com/gonum/internal v0.0.0-20181124074243-f884aa714029 // indirect

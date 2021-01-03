@@ -1,5 +1,6 @@
 package main
 
+
 import (
 	"fmt"
 	"github.com/drgrib/iter"
@@ -17,29 +18,39 @@ func GetSonar() float64 {
 	return w
 }
 
-func LPF() func(x float64) float64 {
-	prevX := 0.0
-	alpha := 0.7
+func SimpleKalman() func(x float64) float64 {
+	A := 1.0
+	H := 1.0
+	Q := 0.0
+	R := 4.0
+
+	x := 0.0
+	P := 0.0
+
 	isFirstRun := true
 
-	return func(x float64) float64 {
+	return func(z float64) float64 {
 
 		if isFirstRun {
 			isFirstRun = false
-			prevX = x //to remove bias
+			x = 14
+			P = 6
 		}
 
-		xlpf := alpha * prevX + (1 - alpha) * x
-		prevX = xlpf
+		xp := A * x
+		Pp := A * P / A + Q
+		K := Pp * H / (H * Pp * H + R)
+		x = xp + K * (z - H * xp)
+		P = Pp - K * H * Pp
 
-		return xlpf
+		return x
 	}
 }
 
 func main() {
-	fmt.Println("Started LPF program")
+	fmt.Println("Started SimpleKalman program")
 
-	filter := LPF()
+	filter := SimpleKalman()
 	nSamples := 100
 	xSaved := gqmathutil.NewVectorZero(nSamples)  //avg x
 	xmSaved := gqmathutil.NewVectorZero(nSamples) // measured x
@@ -59,7 +70,7 @@ func main() {
 	gqmathutil.PrintMatrix(xSaved, "xSaved")
 	gqmathutil.PrintMatrix(xmSaved, "xmSaved")
 
-	p := gqmathutil.New2dPlotter("LPF")
+	p := gqmathutil.New2dPlotter("simple kalman filter(1D)")
 
 	ptsX := gqmathutil.GetXyPointsFromVector(t, xSaved)
 	ptsXm := gqmathutil.GetXyPointsFromVector(t, xmSaved)
@@ -72,7 +83,8 @@ func main() {
 	}
 
 	// Save the plot to a PNG file.
-	if err := p.Save(4*vg.Inch, 4*vg.Inch, "tmp/res_images/ch03_lpf.png"); err != nil {
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, "tmp/res_images/ch10_simple_kalman.png"); err != nil {
 		panic(err)
 	}
 }
+
