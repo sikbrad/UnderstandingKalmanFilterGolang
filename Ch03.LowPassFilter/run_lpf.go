@@ -17,41 +17,29 @@ func GetSonar() float64 {
 	return w
 }
 
-func MovAvgFilter(windowSize int) func(x float64) float64 {
-	prevAvg := 0.0
-	k := 1.0
-	n := windowSize
-	xbuf := gqmathutil.NewVectorOne(n + 1)
+func LPF() func(x float64) float64 {
+	prevX := 0.0
+	alpha := 0.7
 	isFirstRun := true
 
 	return func(x float64) float64 {
 
 		if isFirstRun {
 			isFirstRun = false
-			for idx, _ := range gqmathutil.ToFloatSlice(xbuf) {
-				xbuf.SetVec(idx, x)
-			}
-			prevAvg = x //to rem bias
+			prevX = x //to remove bias
 		}
 
-		for m := range iter.N(n) {
-			xbuf.SetVec(m, xbuf.AtVec(m+1))
-		}
-		xbuf.SetVec(n, x)
+		xlpf := alpha * prevX + (1 - alpha) * x
+		prevX = xlpf
 
-		avg := prevAvg + (x-xbuf.AtVec(0))/float64(n)
-
-		prevAvg = avg
-		k = k + 1
-
-		return avg
+		return xlpf
 	}
 }
 
 func main() {
-	fmt.Println("Started MovingAverageFilter program")
+	fmt.Println("Started LPF program")
 
-	filter := MovAvgFilter(10)
+	filter := LPF()
 	nSamples := 100
 	xSaved := gqmathutil.NewVectorZero(nSamples)  //avg x
 	xmSaved := gqmathutil.NewVectorZero(nSamples) // measured x
@@ -84,7 +72,7 @@ func main() {
 	}
 
 	// Save the plot to a PNG file.
-	if err := p.Save(4*vg.Inch, 4*vg.Inch, "tmp/res_images/ch02_average_filter_points_recursive.png"); err != nil {
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, "tmp/res_images/ch03_lpf.png"); err != nil {
 		panic(err)
 	}
 }

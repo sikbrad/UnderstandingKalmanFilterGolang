@@ -13,6 +13,9 @@ go run ./Ch01.AverageFilter/run_avg_filter.go
 ## run ch02
 go run ./Ch02.MovingAverageFilter/run_moving_average_filter.go
 
+## run ch03
+ go run ./Ch03.LowPassFilter/run_lpf.go
+
 ```
 
 
