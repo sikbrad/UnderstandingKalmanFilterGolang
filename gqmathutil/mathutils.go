@@ -1,10 +1,14 @@
 package gqmathutil
 
 import (
+	"encoding/csv"
 	"fmt"
 	"gonum.org/v1/gonum/mat"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
+	"math/rand"
+	"os"
+	"strconv"
 )
 
 func Linspace(min, max, spacing float64) *mat.VecDense {
@@ -98,4 +102,37 @@ func SumVector(vec *mat.VecDense) float64 {
 		sum += vec.AtVec(i)
 	}
 	return sum
+}
+
+
+func SonarDataLoader() (func() float64, error){
+	csvFile, err := os.Open("data/sonarAlt.csv")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer csvFile.Close()
+
+	reader := csv.NewReader(csvFile)
+
+	csvData, err := reader.ReadAll()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	idxData := 0
+
+	return func() float64{
+		elem := csvData[0][idxData]
+		idxData++
+		datF, _ := strconv.ParseFloat(elem, 64)
+		return datF
+	}, nil
+}
+
+func GetVolt() float64 {
+	stddev := 4.0
+	w := 0.0 + stddev*rand.NormFloat64()
+
+	return w
 }

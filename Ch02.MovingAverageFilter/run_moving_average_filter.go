@@ -1,50 +1,12 @@
 package main
 
 import (
-	"encoding/csv"
 	"fmt"
 	"github.com/drgrib/iter"
 	"github.com/sikbrad/UnderstandingKalmanFilterGolang/gqmathutil"
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
-	"math/rand"
-	"os"
-	"strconv"
 )
-
-
-func GetSonar() float64 {
-
-	stddev := 0.05
-	w := 2.0 + stddev*rand.NormFloat64()
-
-	return w
-}
-
-func SonarDataLoader() (func() float64, error){
-	csvFile, err := os.Open("data/sonarAlt.csv")
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer csvFile.Close()
-
-	reader := csv.NewReader(csvFile)
-
-	csvData, err := reader.ReadAll()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	idxData := 0
-
-	return func() float64{
-		elem := csvData[0][idxData]
-		idxData++
-		datF, _ := strconv.ParseFloat(elem, 64)
-		return datF
-	}, nil
-}
 
 func MovAvgFilter(windowSize int) func(x float64) float64 {
 	prevAvg := 0.0
@@ -86,13 +48,12 @@ func main() {
 	xSaved := gqmathutil.NewVectorZero(nSamples)  //avg x
 	xmSaved := gqmathutil.NewVectorZero(nSamples) // measured x
 
-	dataLoader, err := SonarDataLoader()
+	dataLoader, err := gqmathutil.SonarDataLoader()
 	if err!=nil{
 		panic("cannot open sonar data file")
 	}
 
 	for k := range iter.N(nSamples) {
-		//xm := GetSonar()
 		xm := dataLoader()
 		x := filter(xm)
 

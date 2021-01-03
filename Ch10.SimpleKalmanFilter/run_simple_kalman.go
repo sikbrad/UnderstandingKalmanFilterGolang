@@ -7,16 +7,7 @@ import (
 	"github.com/sikbrad/UnderstandingKalmanFilterGolang/gqmathutil"
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
-	"math/rand"
 )
-
-func GetSonar() float64 {
-
-	stddev := 0.05
-	w := 2.0 + stddev*rand.NormFloat64()
-
-	return w
-}
 
 func SimpleKalman() func(x float64) float64 {
 	A := 1.0
@@ -51,29 +42,29 @@ func main() {
 	fmt.Println("Started SimpleKalman program")
 
 	filter := SimpleKalman()
-	nSamples := 100
-	xSaved := gqmathutil.NewVectorZero(nSamples)  //avg x
-	xmSaved := gqmathutil.NewVectorZero(nSamples) // measured x
+	nSamples := 500
+	xSaved := gqmathutil.NewVectorZero(nSamples) //avg x
+	zSaved := gqmathutil.NewVectorZero(nSamples) // measured x
 
 	for k := range iter.N(nSamples) {
-		xm := GetSonar()
+		xm := gqmathutil.GetVolt()
 		x := filter(xm)
 
 		xSaved.SetVec(k, x)
-		xmSaved.SetVec(k, xm)
+		zSaved.SetVec(k, xm)
 	}
 
 	dt := 0.02
-	t := gqmathutil.Linspace(0, float64(nSamples)*dt, dt)
+	t := gqmathutil.Linspace(0, float64(nSamples)*dt-dt, dt)
 
 	gqmathutil.PrintMatrix(t, "t")
-	gqmathutil.PrintMatrix(xSaved, "xSaved")
-	gqmathutil.PrintMatrix(xmSaved, "xmSaved")
+	gqmathutil.PrintMatrix(xSaved, "kf")
+	gqmathutil.PrintMatrix(zSaved, "measurements")
 
 	p := gqmathutil.New2dPlotter("simple kalman filter(1D)")
 
 	ptsX := gqmathutil.GetXyPointsFromVector(t, xSaved)
-	ptsXm := gqmathutil.GetXyPointsFromVector(t, xmSaved)
+	ptsXm := gqmathutil.GetXyPointsFromVector(t, zSaved)
 
 	err := plotutil.AddLinePoints(p,
 		"ptsXm", ptsXm,

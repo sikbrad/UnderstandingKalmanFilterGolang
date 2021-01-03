@@ -7,7 +7,6 @@ import (
 	"gonum.org/v1/gonum/mat"
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
-	"math/rand"
 )
 
 func AvgFilter() func(x float64) float64 {
@@ -25,12 +24,7 @@ func AvgFilter() func(x float64) float64 {
 	}
 }
 
-func GetVolt() float64 {
-	stddev := 4.0
-	w := 0.0 + stddev*rand.NormFloat64()
 
-	return w
-}
 
 func main() {
 	fmt.Println("Started AvgFilter")
@@ -46,7 +40,7 @@ func main() {
 	xmSaved := mat.NewVecDense(nSamples, nil)
 
 	for i := range iter.N(nSamples) {
-		xm := GetVolt()
+		xm := gqmathutil.GetVolt()
 		avg := avgFilter(xm)
 
 		avgSaved.SetVec(i, avg)
