@@ -1,13 +1,17 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
 	"github.com/drgrib/iter"
 	"github.com/sikbrad/UnderstandingKalmanFilterGolang/gqmathutil"
 	"gonum.org/v1/plot/plotutil"
 	"gonum.org/v1/plot/vg"
 	"math/rand"
+	"os"
+	"strconv"
 )
+
 
 func GetSonar() float64 {
 
@@ -15,6 +19,31 @@ func GetSonar() float64 {
 	w := 2.0 + stddev*rand.NormFloat64()
 
 	return w
+}
+
+func SonarDataLoader() (func() float64, error){
+	csvFile, err := os.Open("data/sonarAlt.csv")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer csvFile.Close()
+
+	reader := csv.NewReader(csvFile)
+
+	csvData, err := reader.ReadAll()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	idxData := 0
+
+	return func() float64{
+		elem := csvData[0][idxData]
+		idxData++
+		datF, _ := strconv.ParseFloat(elem, 64)
+		return datF
+	}, nil
 }
 
 func MovAvgFilter(windowSize int) func(x float64) float64 {
@@ -52,12 +81,19 @@ func main() {
 	fmt.Println("Started MovingAverageFilter program")
 
 	filter := MovAvgFilter(10)
-	nSamples := 100
+	//nSamples := 1501
+	nSamples := 500
 	xSaved := gqmathutil.NewVectorZero(nSamples)  //avg x
 	xmSaved := gqmathutil.NewVectorZero(nSamples) // measured x
 
+	dataLoader, err := SonarDataLoader()
+	if err!=nil{
+		panic("cannot open sonar data file")
+	}
+
 	for k := range iter.N(nSamples) {
-		xm := GetSonar()
+		//xm := GetSonar()
+		xm := dataLoader()
 		x := filter(xm)
 
 		xSaved.SetVec(k, x)
@@ -65,7 +101,7 @@ func main() {
 	}
 
 	dt := 0.02
-	t := gqmathutil.Linspace(0, float64(nSamples)*dt, dt)
+	t := gqmathutil.Linspace(0, float64(nSamples)*dt-dt, dt)
 
 	gqmathutil.PrintMatrix(t, "t")
 	gqmathutil.PrintMatrix(xSaved, "xSaved")
@@ -76,7 +112,7 @@ func main() {
 	ptsX := gqmathutil.GetXyPointsFromVector(t, xSaved)
 	ptsXm := gqmathutil.GetXyPointsFromVector(t, xmSaved)
 
-	err := plotutil.AddLinePoints(p,
+	err = plotutil.AddLinePoints(p,
 		"ptsXm", ptsXm,
 		"ptsX", ptsX)
 	if err != nil {
