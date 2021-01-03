@@ -58,8 +58,8 @@ func main() {
 
 	p := gqmathutil.New2dPlotter("LPF")
 
-	ptsX := gqmathutil.GetXyPointsFromVector(t, xSaved)
-	ptsXm := gqmathutil.GetXyPointsFromVector(t, xmSaved)
+	ptsX := gqmathutil.GetXyPointsFromVectorDense(t, xSaved)
+	ptsXm := gqmathutil.GetXyPointsFromVectorDense(t, xmSaved)
 
 	err = plotutil.AddLinePoints(p,
 		"ptsXm", ptsXm,

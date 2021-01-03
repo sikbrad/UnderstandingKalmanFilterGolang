@@ -42,7 +42,7 @@ func MovAvgFilter(windowSize int) func(x float64) float64 {
 func main() {
 	fmt.Println("Started MovingAverageFilter program")
 
-	filter := MovAvgFilter(10)
+	filter := MovAvgFilter(50)
 	//nSamples := 1501
 	nSamples := 500
 	xSaved := gqmathutil.NewVectorZero(nSamples)  //avg x
@@ -70,8 +70,8 @@ func main() {
 
 	p := gqmathutil.New2dPlotter("moving average filter(batch)")
 
-	ptsX := gqmathutil.GetXyPointsFromVector(t, xSaved)
-	ptsXm := gqmathutil.GetXyPointsFromVector(t, xmSaved)
+	ptsX := gqmathutil.GetXyPointsFromVectorDense(t, xSaved)
+	ptsXm := gqmathutil.GetXyPointsFromVectorDense(t, xmSaved)
 
 	err = plotutil.AddLinePoints(p,
 		"ptsXm", ptsXm,

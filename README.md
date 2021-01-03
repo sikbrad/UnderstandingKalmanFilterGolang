@@ -14,7 +14,10 @@ go run ./Ch01.AverageFilter/run_avg_filter.go
 go run ./Ch02.MovingAverageFilter/run_moving_average_filter.go
 
 ## run ch03
- go run ./Ch03.LowPassFilter/run_lpf.go
+go run ./Ch03.LowPassFilter/run_lpf.go
+
+## run ch10
+go run Ch10.SimpleKalmanFilter/run_simple_kalman.go   
 
 ```
 
@@ -26,9 +29,23 @@ go run ./Ch02.MovingAverageFilter/run_moving_average_filter.go
 
 ![ch01_average_filter_points](./assets/ch01_average_filter_points.png)
 
+
+
 ### Ch2. Moving Avgerage Filter
 
-![ch02_average_filter_points_batch](./assets/ch02_average_filter_points_batch.png)
+![ch02_average_filter_points_batch](./assets/ch02_average_filter_points_recursive.png)
+
+
+
+### Ch3.LowPassFilter
+
+![ch03_lpf](./assets/ch03_lpf.png)
+
+
+
+### Ch10.SimpleKalman (1D)
+
+![ch10_simple_kalman](./assets/ch10_simple_kalman.png)
 
 
 

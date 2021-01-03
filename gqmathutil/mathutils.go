@@ -43,10 +43,24 @@ func ToFloatSlice(v *mat.VecDense) []float64 {
 	return retArr
 }
 
-func GetXyPointsFromVector(xVec, yVec *mat.VecDense) plotter.XYs {
+func GetXyPointsFromVectorDense(xVec, yVec *mat.VecDense) plotter.XYs {
 	return GetXyPointsFromFloatArray(
 		ToFloatSlice(xVec),
 		ToFloatSlice(yVec))
+}
+
+func GetXyPointsFromDense(xVec, yVec *mat.Dense) plotter.XYs {
+	return GetXyPointsFromFloatArray(
+		VectorToFloatSlice(xVec.RowView(0)),
+		VectorToFloatSlice(yVec.RowView(0)))
+}
+
+func VectorToFloatSlice(v mat.Vector) []float64 {
+	retArr := make([]float64, v.Len())
+	for i := range retArr {
+		retArr[i] = v.AtVec(i)
+	}
+	return retArr
 }
 
 func GetXyPointsFromFloatArray(xArr, yArr []float64) plotter.XYs {
@@ -91,6 +105,25 @@ func newVectorWithSingleValue(n int, val float64) *mat.VecDense {
 
 	for i := range make([]int, vec.Len()) {
 		vec.SetVec(i, val)
+	}
+
+	return vec
+}
+
+func NewMatrixOne(rowSize, colSize int) *mat.Dense {
+	return newMatrixWithSingleValue(rowSize, colSize, 1.0)
+}
+func NewMatrixZero(rowSize, colSize int) *mat.Dense {
+	return newMatrixWithSingleValue(rowSize, colSize, 0.0)
+}
+
+func newMatrixWithSingleValue(rowSize, colSize int, val float64) *mat.Dense {
+	vec := mat.NewDense(rowSize, colSize, nil)
+
+	for r := range make([]int, rowSize) {
+		for c := range make([]int, colSize) {
+			vec.Set(r,c,val)
+		}
 	}
 
 	return vec

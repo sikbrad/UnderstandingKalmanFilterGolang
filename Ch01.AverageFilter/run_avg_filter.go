@@ -52,8 +52,8 @@ func main() {
 
 	p := gqmathutil.New2dPlotter("average filter")
 
-	ptsAvg := gqmathutil.GetXyPointsFromVector(t, avgSaved)
-	ptsXm := gqmathutil.GetXyPointsFromVector(t, xmSaved)
+	ptsAvg := gqmathutil.GetXyPointsFromVectorDense(t, avgSaved)
+	ptsXm := gqmathutil.GetXyPointsFromVectorDense(t, xmSaved)
 
 	err := plotutil.AddLinePoints(p,
 		"ptsAvg", ptsAvg,
